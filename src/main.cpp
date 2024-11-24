@@ -4,7 +4,7 @@ const int segPins[] = {3, 5, 6, 9, 10, 11, 12};
 const int buttonPins[] = {A0, A1, A2, A3, A4, A5, 8};
 
 const int digitPatterns[8][7] = {
-     {0, 1, 1, 0, 0, 0, 0}, // 1
+    {0, 1, 1, 0, 0, 0, 0}, // 1
     {0, 0, 1, 0, 1, 0, 1}, // n
     {1, 1, 0, 1, 1, 0, 1}, // 2
     {1, 1, 1, 1, 0, 0, 1}, // 3
@@ -23,25 +23,29 @@ void displayGear(int number)
     {
       digitalWrite(segPins[i], pattern[i]);
     }
-  }else if (number == 1)
+  }
+  else if (number == 1)
   {
     for (int i = 0; i < 7; i++)
     {
       digitalWrite(segPins[i], pattern[i]);
     }
-  }else if (number == 2)
+  }
+  else if (number == 2)
   {
     for (int i = 0; i < 7; i++)
     {
       digitalWrite(segPins[i], pattern[i]);
     }
-  }else if (number == 3)
+  }
+  else if (number == 3)
   {
     for (int i = 0; i < 7; i++)
     {
       digitalWrite(segPins[i], pattern[i]);
     }
-  }else if (number == 4)
+  }
+  else if (number == 4)
   {
     for (int i = 0; i < 7; i++)
     {
@@ -61,7 +65,9 @@ void displayGear(int number)
     {
       digitalWrite(segPins[i], pattern[i]);
     }
-  }else if(number == 8){
+  }
+  else if (number == 8)
+  {
     for (int i = 0; i < 7; i++)
     {
       digitalWrite(segPins[6], pattern[i]);
@@ -77,6 +83,47 @@ void clearDisplay()
   }
 }
 
+void singleSegFadeUpDownAnimation(int segPinIndex)
+{
+  for (int i = 0; i <= 255; i++)
+  {
+    analogWrite(segPins[segPinIndex], i);
+    delay(1);
+  }
+  for (int i = 255; i > 0; i--)
+  {
+    analogWrite(segPins[segPinIndex], i);
+    delay(1);
+  }
+}
+
+void doubleSegFadeUpDownAnimation(int firstsegPinIndex, int secondsegPinIndex)
+{
+  for (int i = 0; i <= 255; i++)
+  {
+    analogWrite(segPins[firstsegPinIndex], i);
+    analogWrite(segPins[secondsegPinIndex], i);
+    delay(1);
+  }
+  for (int i = 255; i > 0; i--)
+  {
+    analogWrite(segPins[firstsegPinIndex], i);
+    analogWrite(segPins[secondsegPinIndex], i);
+    delay(1);
+  }
+}
+
+void bootUpAnimation()
+{
+  singleSegFadeUpDownAnimation(3);
+  clearDisplay();
+  doubleSegFadeUpDownAnimation(2,4);
+  clearDisplay();
+  doubleSegFadeUpDownAnimation(1,5);
+  clearDisplay();
+  singleSegFadeUpDownAnimation(0);
+}
+
 void setup()
 {
   for (int i = 0; i < 7; i++)
@@ -90,6 +137,7 @@ void setup()
   }
 
   Serial.begin(9600);
+  bootUpAnimation();
 }
 
 void loop()
@@ -104,7 +152,9 @@ void loop()
       displayGear(i);
       delay(200);
       break;
-    }else{
+    }
+    else
+    {
       displayGear(8);
     }
   }
